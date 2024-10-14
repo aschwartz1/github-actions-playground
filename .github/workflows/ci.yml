@@ -1,0 +1,33 @@
+name: Run Tests
+
+on:
+  pull_request:
+
+jobs:
+  test:
+    name: RSpec
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        ports:
+          - "5432:5432"
+        env:
+          POSTGRES_DB: rails_test
+          POSTGRES_USER: rails
+          POSTGRES_PASSWORD: password
+    env:
+      RAILS_ENV: test
+      DATABASE_URL: "postgres://rails:password@localhost:5432/rails_test"
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Install Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+      - name: Setup Database Schema
+        run: bin/rails db:schema:load
+      - name: Run Tests
+        run: bundle exec rspec
+      - run: echo "The test job has been run with status ${{ job.status }}."
