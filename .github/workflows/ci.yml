@@ -31,3 +31,10 @@ jobs:
       - name: Run Tests
         run: bundle exec rspec
       - run: echo "The test job has been run with status ${{ job.status }}."
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint with Standard Ruby
+        uses: standardrb/standard-ruby-action@v1
+        with:
+          autofix: false
