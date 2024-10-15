@@ -1,0 +1,18 @@
+name: Label Draft PRs
+
+on:
+  pull_request:
+
+jobs:
+  add_draft_label:
+    name: Add draft label to draft prs
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - run: gh pr edit $NUMBER --add-label "$LABEL"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          LABEL: WIP
